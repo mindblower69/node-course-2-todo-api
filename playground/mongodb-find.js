@@ -37,3 +37,28 @@ db.collection('Users').find({
 
   //client.close();
 });
+
+
+
+
+//flexslider , slider et sliderArgs
+//errorMessage  Impossible to execute « postMessage » on « DOMWindow »
+//errorMessage Failed to load <script> element from source: « https://static.doubleclick.net/instream/ad_status.js ».
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
