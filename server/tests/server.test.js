@@ -10,7 +10,9 @@ const todos = [{
   text: 'First test todo'
 }, {
   _id: new ObjectID(),
-  text: 'Second test todo'
+  text: 'Second test todo',
+  completed: true,
+  completedAt: 333
 }];
 
 beforeEach((done) => {
@@ -81,7 +83,7 @@ describe('GET /todos/:id', () => {
     .expect(200)
     .expect((res) => {
       expect(res.body.todo.text).toBe(todos[0].text);
-    });
+    })
     .end(done);
   });
 
@@ -134,6 +136,64 @@ describe('DELETE /todos/:id', () => {
   it('should return 404 if object id is invalid', (done) => {
     request(app)
     .delete(`/todos/abc123`)
+    .expect(404)
+    .end(done);
+  });
+
+});
+
+describe('PATCH /todos/:id', () => {
+  it('should update the todo', (done) => {
+    var hexID = todos[0]._id.toHexString();
+    var text = 'Brand new text'
+
+    request(app)
+    .patch(`/todos/${hexID}`)
+    .send({
+        completed: true,
+        text
+    })
+    .expect(200)
+    .expect((res) => {
+      expect(res.body.todo.text).toBe(text);
+      expect(res.body.todo.completed).toBe(true);
+      expect(res.body.todo.completedAt).toBeA('number');
+    })
+    .end(done);
+  //res.body.completedAt  .toBeA('number');
+  });
+
+  it('should clear completedAt when todo is not completed', (done) => {
+    //res.body.completedAt  .toNotExist();
+    var hexID = todos[1]._id.toHexString();
+    var text = 'Brand new text again!'
+
+    request(app)
+    .patch(`/todos/${hexID}`)
+    .send({
+        completed: false,
+        text
+    })
+    .expect(200)
+    .expect((res) => {
+      expect(res.body.todo.text).toBe(text);
+      expect(res.body.todo.completed).toBe(false);
+      expect(res.body.todo.completedAt).toNotExist();
+    })
+    .end(done);
+  });
+
+  it('should return 404 if todo not found', (done) => {
+    var hexID = new ObjectID().toHexString();
+    request(app)
+    .patch(`/todos/${hexID}`)
+    .expect(404)
+    .end(done);
+  });
+
+  it('should return 404 if object id is invalid', (done) => {
+    request(app)
+    .patch(`/todos/abc123`)
     .expect(404)
     .end(done);
   });
