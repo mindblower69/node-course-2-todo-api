@@ -1,6 +1,25 @@
 const {SHA256} = require('crypto-js');//This grabs the property (method) {SHA256} of the return result of require('crypto-js')
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
+var password = '123abc!';
+/*
+bcrypt.genSalt(10, (err, salt) => {
+  bcrypt.hash(password, salt, (err, hash) => {
+    console.log(hash);
+  });
+});*/
+
+var hashedPassword = '$2a$10$NKqxH3Uq0nBd2Fes0QezLeCudY1xFkL5V7mk5nO3EjyYuDm42mFKC';
+
+bcrypt.compare(password, hashedPassword, (err, res) => {
+  console.log(res);
+});
+
+
+
+
+/*
 var data = {
   id: 10
 };
@@ -13,7 +32,7 @@ console.log('decoded', decoded)
 
 
 
-/*
+
 var message = 'I am user number 3';
 var hash = SHA256(message).toString();
 
