@@ -70,6 +70,26 @@ UserSchema.statics.findByToken = function (token) {
   });
 };
 
+UserSchema.statics.findByCredentials = function (email, password) {
+   var User = this;
+
+   return User.findOne({email}).then((user) => {
+     if (!user) {
+       return Promise.reject();
+     }
+
+     return new Promise((resolve, reject) => { //The reason we are creating a new promise here is because the bcrypt library doesn't support it natively but we want to be able to keep using them
+       bcrypt.compare(password, user.password, (req, res) => {
+         if (res) {
+           resolve(user);
+         } else {
+           reject();
+         }
+       });
+     });
+   });
+};
+
 UserSchema.pre('save', function (next) { //You need to mention the next variable and call it somewhere in the function or else the program will crash
   var user = this;
 
